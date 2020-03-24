@@ -1,5 +1,5 @@
 # Support Vector Regression Package
-MySVR is a Support Vector Regression (SVR) package with multi-kernel feature. Written with a simple style, this package is suitable for anyone who wished to learn about SVR implementation in Python.
+MySVR is a Support Vector Regression (SVR) package with multi-kernel feature. Written with a simple style, this package is suitable for anyone who wish to learn about SVR implementation in Python.
  
 ### Table of contents
 - [Example](#example)
@@ -16,7 +16,38 @@ from svr.SV import SVR
 import matplotlib.pyplot as plt
 ```
 
-The SVR package requires input variables $X$ and its corresponding response $y$
+The SVR package requires input variables ***X*** and its corresponding response ***y***, therefore we define the inputs as:
+
+```python
+Xsamp = np.array([0,0.5,0.25,0.75,0.125,0.625,0.375,0.875,0.0625,0.5625]).reshape(-1,1)  # The input should be nsamp x nvar
+Ysamp = Xsamp * np.sin(Xsamp*np.pi)  # The response should be nsamp x 1
+maxY = max(abs(Ysamp))  # For normalizing Y
+```
+
+The next step is to define the parameter dictionary details of the dictionary key is available in `help(SVR)`:
+
+```python
+svrinfo['x'] = Xsamp  # Input variables X
+svrinfo['y'] = Ysamp/maxY  # Corresponding input response Y (normalized)
+svrinfo['epsilon'] = 0.05  # Define the epsilon tube, this parameter is optional 
+svrinfo['optimizer'] = 'lbfgsb'  # Define optimizer, this parameter is optional
+svrinfo['errtype'] = 'L2'  # Define metric for model training, this parameter is optional
+svrinfo['kerneltype'] = ['gaussian','matern52']  # Define kernel type, in this case we use multiple kernel for demo. This parameter is optional 
+```
+
+To create and train the model, simply feed the dictionary into the SVR:
+
+```python
+model = SVR(svrinfo, normalize=False)
+model.train()
+```
+
+To predict values, feed your input to the `.predict()` method:
+
+```python
+xplot = np.linspace(0,1,100).reshape(-1,1) # Create a set of prediction input
+ypred = model.predict(xplot)
+```
 
 
 ### Dependencies
