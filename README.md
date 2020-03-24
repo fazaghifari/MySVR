@@ -27,6 +27,7 @@ maxY = max(abs(Ysamp))  # For normalizing Y
 The next step is to define the parameter dictionary details of the dictionary key is available in `help(SVR)`:
 
 ```python
+svrinfo = dict()
 svrinfo['x'] = Xsamp  # Input variables X
 svrinfo['y'] = Ysamp/maxY  # Corresponding input response Y (normalized)
 svrinfo['epsilon'] = 0.05  # Define the epsilon tube, this parameter is optional 
@@ -48,6 +49,19 @@ To predict values, feed your input to the `.predict()` method:
 xplot = np.linspace(0,1,100).reshape(-1,1) # Create a set of prediction input
 ypred = model.predict(xplot)
 ```
+
+Finally, plotting:
+```python
+plt.plot(xplot, ypred * maxY, 'k', label='Prediction')
+plt.plot(xplot, (ypred - model.svrinfo.epsilon) * maxY, 'r--', label='Epsilon -')
+plt.plot(xplot, (ypred + model.svrinfo.epsilon) * maxY, 'r--', label='Epsilon +')
+plt.scatter(Xsamp, Ysamp, c='b', marker='+', label='Samples')
+plt.xlabel('X')
+plt.ylabel('y')
+plt.legend()
+plt.show()
+```
+The result might looks like the following:
 
 
 ### Dependencies
