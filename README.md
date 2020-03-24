@@ -5,6 +5,7 @@ MySVR is a Support Vector Regression (SVR) package with multi-kernel feature. Wr
 - [Example](#example)
 - [Installation](#installation)
 - [Dependencies](#dependencies)
+- [References](#references)
 
 ## Example
 Example of the package usage can be found in [examples](https://github.com/fazaghifari/MySVR/tree/master/svr/examples) folder. Here an example of 1 dimensional case found in [examples/1d_svr](https://github.com/fazaghifari/MySVR/blob/master/svr/examples/1d_svr.py) is given.
@@ -72,7 +73,7 @@ MySVR works with Python 3, to install write:
 pip install mysvr
 ```
 
-### Dependencies
+## Dependencies
 
 MySVR has the following dependencies:
 
@@ -81,6 +82,11 @@ MySVR has the following dependencies:
 * `matplotlib`
 * `sobolsampling`
 * `cvxopt`
+
+## Reference
+ - Chang, M., & Lin, C. (2005). Leave-One-Out Bounds for Support Vector Regression Model Selection. Neural Computation, 17(5), 1188 1222. https://doi.org/10.1162/0899766053491869
+ - UQLab User manual for [Support Vector Regression](https://uqftp.ethz.ch/uqlab_doc_pdf/1.3.0/UserManual_SupportVectorMachinesRegression.pdf)
+ - Forrester, A., Sobester, A., & Keane, A. (2008). Engineering Design via Surrogate Modelling: A Practical Guide. John Wiley & Sons.
 
 #### Author
 Kemas Zakaria and Ghifari Adam F
