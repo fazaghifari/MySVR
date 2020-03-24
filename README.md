@@ -73,3 +73,6 @@ MySVR has the following dependencies:
 * `matplotlib`
 * `sobolsampling`
 * `cvxopt`
+
+#### Author
+Kemas Zakaria and Ghifari Adam F
