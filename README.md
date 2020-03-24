@@ -62,7 +62,7 @@ plt.legend()
 plt.show()
 ```
 The result might looks like the following:
-
+![Example of results](https://github.com/fazaghifari/MySVR/blob/master/images/1dim.png "Results for 1 dimensional SVR prediction.")
 
 ### Dependencies
 
