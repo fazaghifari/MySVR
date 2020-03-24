@@ -1,6 +1,6 @@
 '''
 Author: Ghifari Adam Faza <ghifariadamf@gmail.com>
-This package is distributed under New BSD license.
+This package is distributed under MIT license.
 '''
 
 from setuptools import setup
