@@ -42,7 +42,7 @@ def l2svr(xparam,svrinfo,return_all=False):
         wgk = np.array([svrinfo.wgk])
     except AttributeError:
         if svrinfo.nkrnl > 1:
-            wgk = 10 ** xparam[svrinfo.nlens + svrinfo.nepsi + svrinfo.c - 1:]
+            wgk = 10 ** xparam[svrinfo.nlens + svrinfo.nepsi + svrinfo.nc - 1:]
         else:
             wgk = np.array([1])
 

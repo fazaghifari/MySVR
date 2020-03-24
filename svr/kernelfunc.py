@@ -41,7 +41,7 @@ def gaussian(XN,XM,theta,nvar):
     Psi = np.exp(-0.5*np.sum(mdist,2))
     return Psi
 
-def exponential(XN,XM,theta,nvar,pls):
+def exponential(XN,XM,theta,nvar):
     mdist = np.zeros((np.size(XN,0),np.size(XM,0),nvar))
     for ii in range(0,nvar):
         X1 = np.transpose(np.array([XN[:,ii]]))
@@ -50,7 +50,7 @@ def exponential(XN,XM,theta,nvar,pls):
     Psi = np.exp(-np.sum(mdist,2))
     return Psi
 
-def matern32(XN,XM,theta,nvar,pls):
+def matern32(XN,XM,theta,nvar):
     mdist = np.zeros((np.size(XN,0),np.size(XM,0),nvar))
     for ii in range(0,nvar):
         X1 = np.transpose(np.array([XN[:,ii]]))
@@ -61,7 +61,7 @@ def matern32(XN,XM,theta,nvar,pls):
     Psi = m3f*m3s
     return Psi
 
-def matern52(XN,XM,theta,nvar,pls):
+def matern52(XN,XM,theta,nvar):
     mdist = np.zeros((np.size(XN,0),np.size(XM,0),nvar))
     for ii in range(0,nvar):
         X1 = np.transpose(np.array([XN[:,ii]]))
