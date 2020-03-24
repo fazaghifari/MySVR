@@ -3,6 +3,7 @@ MySVR is a Support Vector Regression (SVR) package with multi-kernel feature. Wr
  
 ### Table of contents
 - [Example](#example)
+- [Installation](#installation)
 - [Dependencies](#dependencies)
 
 ## Example
@@ -63,6 +64,13 @@ plt.show()
 ```
 The result might looks like the following:
 ![Example of results](https://github.com/fazaghifari/MySVR/blob/master/images/1dim.png "Results for 1 dimensional SVR prediction.")
+
+## Installation
+MySVR works with Python 3, to install write:
+
+```
+pip install mysvr
+```
 
 ### Dependencies
 
