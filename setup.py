@@ -20,7 +20,7 @@ Author: Kemas Zakaria and Ghifari Adam F
 
 metadata = dict(
     name='mysvr',
-    version='1.0.0',
+    version='1.0.1',
     description='Support Vector Regression (SVR) package.',
     long_description=LONG_DESCRIPTION,
     author='Kemas Zakaria and Ghifari Adam F',

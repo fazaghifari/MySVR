@@ -3,7 +3,7 @@ from svr.L2 import l2svr
 from sobolsampling.sobol_new import sobol_points
 from svr.kernelfunc import calckernel
 from scipy.optimize import minimize
-
+from scipy.optimize import differential_evolution
 
 class SVRInfo:
     """
@@ -50,6 +50,7 @@ class SVRInfo:
                                          ranges=np.vstack((info["lb"], info["ub"])))
         else:
             info['x_norm'] = info['x']
+        info['normalize'] = normalize
 
         # Check and set default value for kernel settings
         if 'kerneltype' not in info:
@@ -121,7 +122,7 @@ class SVRInfo:
             info['lbhyp'] = np.array([item for sublist in temp for item in sublist])
 
         if 'ubhyp' not in info:
-            temp = [[3]*info['nlens'], [0]*info['nepsi'], [2]*info['nc'], [1]*info['nwgk']]
+            temp = [[3]*info['nlens'], [0]*info['nepsi'], [3]*info['nc'], [1]*info['nwgk']]
             info['ubhyp'] = np.array([item for sublist in temp for item in sublist])
 
         if 'errtype' not in info:
@@ -199,8 +200,8 @@ class SVR:
                 raise NotImplementedError('Other options are not yet available')
 
         else:
-            xhyp0_norm = sobol_points(self.svrinfo.nrestart+1, self.svrinfo.nvar)
-            xhyp0 = xhyp0_norm[1:,:] * (self.svrinfo.ubhyp - self.svrinfo.lbhyp) + self.svrinfo.lbhyp
+            xhyp0_norm = sobol_points(self.svrinfo.nrestart+1, len(self.svrinfo.lbhyp))
+            xhyp0 = realval(np.array(self.svrinfo.lbhyp), np.array(self.svrinfo.ubhyp), xhyp0_norm[1:,:])
             optimbound = np.transpose(np.vstack((self.svrinfo.lbhyp, self.svrinfo.ubhyp)))
 
             bestxcand = np.zeros(np.shape(xhyp0))
@@ -211,6 +212,10 @@ class SVR:
                 if self.svrinfo.optimizer == 'lbfgsb':
                     res = minimize(l2svr, xhyp0_ii, method='L-BFGS-B', options={'eps': 1e-03, 'disp':False},
                                    bounds=optimbound, args=(self.svrinfo, False))
+                    bestxcand_ii = res.x
+                    errloocand_ii = res.fun
+                elif self.svrinfo.optimizer == 'diff_evo':
+                    res = differential_evolution(l2svr,optimbound,args=(self.svrinfo, False))
                     bestxcand_ii = res.x
                     errloocand_ii = res.fun
                 else:
@@ -234,13 +239,17 @@ class SVR:
         theta = self.svrinfo.theta
         kerneltype = self.svrinfo.kerneltype
         covlst = []
+        if self.svrinfo.normalize:
+            x_norm = standardize(x, type='default',ranges=np.vstack((self.svrinfo.lb, self.svrinfo.ub)))
+        else:
+            x_norm = x
 
         for i in range(self.svrinfo.nkrnl):
             if self.svrinfo.lenscale == 'anisotropic':
-                cov_i = calckernel(self.svrinfo.x, x, theta, self.svrinfo.nvar, ker=kerneltype[i])
+                cov_i = calckernel(self.svrinfo.x_norm, x_norm, theta, self.svrinfo.nvar, ker=kerneltype[i])
             else:
                 theta_k = theta * np.ones(self.svrinfo.nvar)
-                cov_i = calckernel(self.svrinfo.x, x, theta_k, self.svrinfo.nvar, ker=kerneltype[i])
+                cov_i = calckernel(self.svrinfo.x_norm, x_norm, theta_k, self.svrinfo.nvar, ker=kerneltype[i])
 
             covlst.append(cov_i)
 
@@ -276,7 +285,7 @@ def standardize(X,y=None,type='default',norm_y=False, ranges = np.array([None]))
             for i in range(0,np.size(X,1)):
                 X_norm[:,i] = (X[:,i]-ranges[0,i])/(ranges[1,i]-ranges[0,i])
             #Normalize to [-1,1]
-            X_norm = (X_norm-0.5)*2
+            # X_norm = (X_norm-0.5)*2
             return X_norm
 
     elif type.lower() == 'std':
@@ -298,3 +307,15 @@ def standardize(X,y=None,type='default',norm_y=False, ranges = np.array([None]))
 
             X_norm = (X - X_mean) / X_std
             return X_norm, X_mean, X_std
+
+
+def realval(lb,ub,samp):
+    if len(ub) != len(lb):
+        raise ValueError("Lower and upper bound have to be in the same dimension")
+    ndim = len(ub)
+    nsamp = np.size(samp,axis=0)
+    realsamp = np.zeros(shape=[nsamp,ndim])
+    for i in range(0, ndim):
+        for j in range(0, nsamp):
+            realsamp[j, i] = (samp[j, i] * (ub[i] - lb[i])) + lb[i]
+    return realsamp
